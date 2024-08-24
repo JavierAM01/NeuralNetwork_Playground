@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/playground_style.css') }}">
+    <script src="https://d3js.org/d3.v6.min.js"></script>  <!-- import d3 para dibujar-->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>    <!-- import socketio para conexiones -->
+</head>
+<body>
+    <header id="header"></header>
+    <div class="main_container">
+        <div class="bloque bloque_1">
+            <div class="contenedor_b1">
+                <div class="titulo_b1">Comparativa de optimizadores</div>
+                <div class="contenido_b1">
+                    <div class="contenido_b1">
+                        <p>Bienvenido al módulo de comparación de optimizadores dentro de nuestro playground de redes neuronales. Aquí tendrás la oportunidad de explorar cómo diferentes optimizadores afectan el rendimiento de una red neuronal utilizando el conjunto de datos MNIST para el reconocimiento de dígitos escritos a mano. Primero, debes diseñar y configurar la arquitectura de tu red neuronal en la sección <b>Configuración</b>. Una vez definida la arquitectura, procederás a entrenar dos instancias idénticas de esta red, cada una con un optimizador diferente seleccionado en la sección <b>Entrenamiento</b>.</p>
+                        <p>Al final del proceso, podrás acceder a una comparativa que muestra los resultados de rendimiento de cada optimizador. Esta herramienta es ideal para entender mejor las ventajas y limitaciones de cada opción y determinar cuál optimizador es más eficiente en términos de velocidad de convergencia y precisión en la tarea de clasificación de dígitos.</p>
+                    </div>
+                </div>
+                <div class="red" id="networkSVG">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+            </div>
+        </div>
+        <div class="bloque bloque_2">
+            <div class="contenedor1_b2">
+                <div class="grafica" id="graphSVG_0">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+                <div class="grafica" id="graphSVG_1">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+            </div>
+            <div class="contenedor2_b2">
+                <button class="boton" id="createNetwork">Crear RED</button>
+                <button class="boton" id="trainNetwork">Entrenar RED</button>
+            </div>
+        </div>
+        <div class="bloque bloque_3">
+            <div class="contenedor_b3">
+                <div class="titulo_b3">CONFIGURACIÓN</div>
+                <div class="contenido_b3">
+                    <div class="contenido_capas_b3">
+                        <div class="subtitulo_b3" style="display: flex; align-items: center; justify-content: space-between;">
+                            <span>Capas:</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="button-sidebar" type="button" id="addLayer" onclick="addLayerInputs()"><b>+</b></button>
+                                <button class="button-sidebar" type="button" id="removeLayer" onclick="removeLayerInputs()"><b>-</b></button>
+                            </div>
+                        </div>
+                        <div class="capas_b3">
+                            <form id="layerForm">
+                                <br></br>
+                                <div id="layersConfig"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="contenido_entrenamiento_b3">
+                        <div class="subtitulo_b3">Entrenamiento</div>
+                        <div class="entrenamiento_b3">
+                            <form>
+                                <div>
+                                    Etapas: 
+                                    <input id="trainingEpochs" type="number" value="10" style = "width: 50px;">
+                                    <br><br>
+                                    Tamaño de Batch: 
+                                    <input id="trainingBatchSize" type="number" value="128" style = "width: 50px;">
+                                    <br><br>
+                                    Optimizador 1: 
+                                    <select id="trainingOptimizer1" style = "width: 100px;">
+                                        <option value="adam">adam</option>
+                                        <option value="sgd">sgd</option>
+                                        <option value="rmsprop">rmsprop</option>
+                                        <option value="adagrad">adagrad</option>
+                                        <option value="adadelta">adadelta</option>
+                                        <option value="adamax">adamax</option>
+                                        <option value="nadam">nadam</option>
+                                    </select>
+                                    <br><br>
+                                    Optimizador 2: 
+                                    <select id="trainingOptimizer2" style = "width: 100px;">
+                                        <option value="adam">adam</option>
+                                        <option value="sgd">sgd</option>
+                                        <option value="rmsprop">rmsprop</option>
+                                        <option value="adagrad">adagrad</option>
+                                        <option value="adadelta">adadelta</option>
+                                        <option value="adamax">adamax</option>
+                                        <option value="nadam">nadam</option>
+                                    </select>
+                                    <br>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- extras para jugar con el js -->
+    <div class="tooltip"></div>
+    <div id="warningMessage" class="message">  <!-- para poner warnings si pasa algún error -->
+        <div class="message-content">
+            <span class="close" onclick="closeWarning()">&times;</span>
+            <h3 id="warningMessage-title"></h3>
+            <div id="warningMessage-info"></div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/compareoptimizers.js') }}"></script>
+</body>
+</html>

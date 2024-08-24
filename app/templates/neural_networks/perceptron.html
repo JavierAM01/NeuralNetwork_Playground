@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/playground_style.css') }}">
+    <title>Visualización de Red Neuronal</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>                   <!-- import d3 para dibujos -->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>    <!-- import socketio para conexiones -->
+</head>
+<body>
+    <header id="header"></header>
+    <div class="main_container">
+        <div class="bloque bloque_1">
+            <div class="contenedor_b1">
+                <div class="titulo_b1">Perceptrón</div>
+                <div class="contenido_b1" style="overflow-y: auto;">
+                    <p>Aquí exploraremos diferentes arquitecturas del perceptrón para resolver problemas de regresión lineal y no lineal, clustering, y más. Podrás experimentar con distintos optimizadores, funciones de activación y funciones de pérdida para entender cómo funciona internamente la red y descubrir qué arquitectura se adapta mejor a cada tipo de problema.</p>
+                    <p>Usa la interfaz de configuración para ajustar los parámetros de tu red neuronal y observa los resultados en tiempo real a través de las gráficas de entrenamiento, que mostrarán métricas como "loss" y "val_loss", así como los datos de entrenamiento y los resultados obtenidos. ¡Diviértete aprendiendo y experimentando con los diferentes componentes del perceptrón!</p>
+                    <div class="red" id="networkSVG">
+                        <svg width="100%" height="100%"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bloque bloque_2">
+            <div class="contenedor1_b2">
+                <div class="grafica" id="graphSVG">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+                <div class="grafica" id="plotSVG">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+            </div>
+            <div class="contenedor2_b2">
+                <button class="boton" id="createNetwork">Crear RED</button>
+                <button class="boton" id="trainNetwork">Entrenar RED</button>
+            </div>
+        </div>
+        <div class="bloque bloque_3">
+            <div class="contenedor_b3">
+                <div class="titulo_b3">CONFIGURACIÓN</div>
+                <div class="contenido_b3">
+                    <div class="contenido_capas_b3">
+                        <div class="subtitulo_b3" style="display: flex; align-items: center; justify-content: space-between;">
+                            <span>Ejercicio:</span>
+                            <select id="typeTraining" style = "width: 150px;">
+                                <option value="Regresión lineal">Regresión lineal</option>
+                                <option value="Regresión no lineal">Regresión no lineal</option>
+                                <option value="Clustering binario lineal">Clustering binario lineal</option>
+                                <option value="Clustering binario circular">Clustering binario circular</option>
+                                <option value="Clustering de 3 grupos">Clustering de 3 grupos</option>
+                            </select>
+                        </div>
+                        <div class="subtitulo_b3" style="display: flex; align-items: center; justify-content: space-between;">
+                            <span>Capas:</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="button-sidebar" type="button" id="addLayer" onclick="addLayerInputs()"><b>+</b></button>
+                                <button class="button-sidebar" type="button" id="removeLayer" onclick="removeLayerInputs()"><b>-</b></button>
+                            </div>
+                        </div>
+                        <div class="capas_b3">
+                            <form id="layerForm">
+                                <div id="layersConfig"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="contenido_entrenamiento_b3">
+                        <div class="subtitulo_b3">Entrenamiento</div>
+                        <div class="entrenamiento_b3">
+                            <form>
+                                <div id="layersConfig">
+                                    Optimizador: 
+                                    <select id="optimizerTraining" style = "width: 150px;">
+                                        <option value="adam">adam</option>
+                                        <option value="sgd">sgd</option>
+                                        <option value="rmsprop">rmsprop</option>
+                                        <option value="adagrad">adagrad</option>
+                                        <option value="adadelta">adadelta</option>
+                                        <option value="adamax">adamax</option>
+                                        <option value="nadam">nadam</option>
+                                    </select>
+                                    <br><br>
+                                    Función de pérdida: 
+                                    <select id="lossTraining" style = "width: 200px;">
+                                        <option value="binary_crossentropy">binary_crossentropy</option>
+                                        <option value="categorical_crossentropy">categorical_crossentropy</option>
+                                        <option value="sparse_categorical_crossentropy">sparse_categorical_crossentropy</option>
+                                        <option value="mean_squared_error">mean_squared_error</option>
+                                        <option value="hinge">hinge</option>
+                                    </select>
+                                    <br><br>
+                                    Etapas: 
+                                    <input id="epochsTraining" type="number" value="100" min="0" style="width: 50px;"></input>
+                                    <br><br>
+                                    Tamaño del Batch: 
+                                    <input id="batchSizeTraining" type="number" value="1" min="1" style="width: 50px;"></input>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- extras invisibles para jugar -->
+    <div class="tooltip"></div>  <!-- para cuando seleccione con el ratón en la gráfica -->
+    <div id="warningMessage" class="message">  <!-- para poner warnings si pasa algún error -->
+        <div class="message-content">
+            <span class="close" onclick="closeWarning()">&times;</span>
+            <h3 id="warningMessage-title"></h3>
+            <div id="warningMessage-info"></div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/perceptron.js') }}"></script>
+</body>
+</html>

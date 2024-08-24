@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funciones de Error en Machine Learning</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theory_style.css') }}">
+</head>
+<body>
+    <header id="header"></header>
+    <div class="main_container">
+        <div class="bloque bloque_1"></div>
+        <div class="bloque bloque_2">
+            <h2>Mean Squared Error (MSE)</h2>
+            <div class="formula">
+                <p>
+                    La función de error de MSE mide el promedio de los cuadrados de los errores, es decir, la diferencia entre los valores predichos y los valores reales.
+                </p>
+                <p>
+                    <code>MSE = (1/N) &Sigma;(y<sub>i</sub> - &ycirc;<sub>i</sub>)²</code>
+                </p>
+                <p>
+                    Donde:
+                    <ul>
+                        <li>N es el número de muestras.</li>
+                        <li>y<sub>i</sub> es el valor real.</li>
+                        <li>&ycirc;<sub>i</sub> es el valor predicho.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <h2>Binary Cross-Entropy</h2>
+            <div class="formula">
+                <p>
+                    La función de error de binary cross-entropy se utiliza para problemas de clasificación binaria. Mide la discrepancia entre las probabilidades predichas y las etiquetas reales.
+                </p>
+                <p>
+                    <code>Binary Cross-Entropy = -(1/N) &Sigma; [ y<sub>i</sub> log(p<sub>i</sub>) + (1 - y<sub>i</sub>) log(1 - p<sub>i</sub>) ]</code>
+                </p>
+                <p>
+                    Donde:
+                    <ul>
+                        <li>N es el número de muestras.</li>
+                        <li>y<sub>i</sub> es la etiqueta real (0 o 1).</li>
+                        <li>p<sub>i</sub> es la probabilidad predicha de que la etiqueta sea 1.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <h2>Categorical Cross-Entropy</h2>
+            <div class="formula">
+                <p>
+                    La función de error de categorical cross-entropy se utiliza para problemas de clasificación multiclase. Mide la discrepancia entre las distribuciones de probabilidad predichas y las etiquetas one-hot.
+                </p>
+                <p>
+                    <code>Categorical Cross-Entropy = -(1/N) &Sigma;&Sigma; y<sub>ij</sub> log(p<sub>ij</sub>)</code>
+                </p>
+                <p>
+                    Donde:
+                    <ul>
+                        <li>N es el número de muestras.</li>
+                        <li>C es el número de clases.</li>
+                        <li>y<sub>ij</sub> es la etiqueta real (one-hot encoded, 0 o 1).</li>
+                        <li>p<sub>ij</sub> es la probabilidad predicha de que la muestra i pertenezca a la clase j.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <h2>Sparse Categorical Cross-Entropy</h2>
+            <div class="formula">
+                <p>
+                    La función de error de sparse categorical cross-entropy es similar a la categorical cross-entropy, pero se utiliza cuando las etiquetas no están one-hot encoded, sino que son enteros que representan la clase.
+                </p>
+                <p>
+                    <code>Sparse Categorical Cross-Entropy = -(1/N) &Sigma; log(p<sub>i, y<sub>i</sub></sub>)</code>
+                </p>
+                <p>
+                    Donde:
+                    <ul>
+                        <li>N es el número de muestras.</li>
+                        <li>y<sub>i</sub> es la clase real (entero).</li>
+                        <li>p<sub>i, y<sub>i</sub></sub> es la probabilidad predicha de que la muestra i pertenezca a la clase y<sub>i</sub>.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <h2>Mean Absolute Error (MAE)</h2>
+            <div class="formula">
+                <p>
+                    La función de error de MAE mide el promedio de las diferencias absolutas entre los valores predichos y los valores reales.
+                </p>
+                <p>
+                    <code>MAE = (1/N) &Sigma; |y<sub>i</sub> - &ycirc;<sub>i</sub>|</code>
+                </p>
+                <p>
+                    Donde:
+                    <ul>
+                        <li>N es el número de muestras.</li>
+                        <li>y<sub>i</sub> es el valor real.</li>
+                        <li>&ycirc;<sub>i</sub> es el valor predicho.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <h2>Hinge Loss</h2>
+            <div class="formula">
+                <p>
+                    La función de pérdida de bisagra (hinge loss) se utiliza para problemas de clasificación binaria con SVM.
+                </p>
+                <p>
+                    <code>Hinge Loss = (1/N) &Sigma; max(0, 1 - y<sub>i</sub> &cdot; &ycirc;<sub>i</sub>)</code>
+                </p>
+                <p>
+                    Donde:
+                    <ul>
+                        <li>N es el número de muestras.</li>
+                        <li>y<sub>i</sub> es la etiqueta real (-1 o 1).</li>
+                        <li>&ycirc;<sub>i</sub> es el valor predicho.</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+        <div class="bloque bloque_3"></div>
+    </div>
+    <!-- añadir el header -->
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            fetch('/static/data/header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+        });
+    </script>
+</body>
+</html>

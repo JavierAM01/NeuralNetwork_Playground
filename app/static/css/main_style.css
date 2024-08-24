@@ -1,0 +1,98 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: linear-gradient(to bottom, #FFFFFF, #E0E0E0);
+    margin: 0;
+    padding: 0;
+    color: #000000;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+
+/* ----------------------------------- HEADER ----------------------------------- */
+
+header {
+    background-color: transparent;
+    text-align: right;
+    z-index: 100;
+}
+
+.nav {
+    margin-right: 25px;
+}
+
+.nav li {
+    display: inline-block;
+    position: relative;
+}
+
+.nav a {
+    display: block;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #666666;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background-color: #ececec;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    list-style: none;
+    text-align: center;
+    padding: 0;
+    margin-top: 1px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    background-color: #fff;
+    border-radius: 10px;
+    width: 150px;
+}
+
+.submenu li {
+    display: block;
+}
+
+.nav li:hover .submenu {
+    display: block;
+}
+
+
+
+/* ----------------------------------- MAIN CONTAINER ----------------------------------- */
+
+.main_container {
+    display: flex;
+    width: 100%;
+    padding: 0 20px 20px 20px;
+    box-sizing: border-box;
+    flex: 1;
+    height: calc(100vh - 64.8px);
+    overflow: hidden;
+}
+
+
+/* ----------------------------------- BARRA DE DESPLAZAMIENTO ----------------------------------- */
+
+/* Estilo base para la barra de desplazamiento */
+body *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+}
+/* Estilo para el "pulgar" de la barra de desplazamiento */
+body *::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Color del "pulgar" */
+    border-radius: 4px;
+}
+/* Estilo para el "pulgar" de la barra de desplazamiento al pasar el cursor */
+body *:hover::-webkit-scrollbar-thumb {
+    background-color: #e3e3e3; /* Color del "pulgar" al pasar el cursor */
+}
+

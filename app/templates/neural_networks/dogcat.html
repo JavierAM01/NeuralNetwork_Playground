@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog vs Cat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/playground_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mnist_board_style.css') }}">
+    <script src="https://d3js.org/d3.v6.min.js"></script>  <!-- import d3 para dibujar-->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>    <!-- import socketio para conexiones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  <!-- para los iconos-->
+</head>
+<body>
+    <header id="header"></header>
+    <div class="main_container">
+        <div class="bloque bloque_1">
+            <div class="contenedor_b1">
+                <div class="titulo_b1">Dog vs Cat</div>
+                <div class="contenido_b1">
+                    <p>Bienvenidos a nuestro sitio donde utilizamos una red neuronal avanzada con aprendizaje por transferencia de ImageNet para predecir y clasificar imágenes de perros y gatos. Esta red se ha entrenado y ajustado específicamente para identificar características distintivas de estas mascotas.</p>
+                    <p>Mediante el uso de modelos preentrenados, optimizamos la eficacia de la red en el reconocimiento de imágenes, proporcionando una herramienta útil para la identificación precisa de perros y gatos.</p>
+                    <form action="/upload" method="post" enctype="multipart/form-data" id="imageForm">
+                        <input hidden="hidden" id="imageInput" name="image" type="file" accept="image/*">  
+                    </form>
+                </div>
+                <div class="red" id="networkSVG">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+            </div>
+        </div>
+        <div class="bloque bloque_2" style="width: 40%;">
+            <!--<div class="contenedor1_b2">
+                <div id="networkSVG" style="flex-direction: column; display: flex; justify-content: center; align-items: center; flex:1; padding:20px; overflow: hidden;">
+                    <div class="titulo_b1" id="resultado"></div>                    
+                    <div id="imageDiv" style="display:flex; padding: 0 20px; flex:1; max-height:100%; padding-bottom: 10px;">
+                        <img id="imageFrame" style="flex:1; border-radius: 30px;">
+                    </div>
+                </div>
+            </div>-->
+            <div class="middle_container">
+                <div class="flex-column-container">
+                    <div id="playgroundInternalButtons" style="margin-bottom: 0px;">
+                        <div id="clearBoard" style="padding-right: 20px;"><i class="fa-solid fa-trash"></i></div>
+                        <div id="playButton" style="padding-right: 20px;"><i class="fa-solid fa-play"></i></div>
+                    </div>
+                    <div id="networkSVG" style="margin-right: 20px; flex-direction: column; display: flex; justify-content: center; align-items: center; flex:1; overflow: hidden;">
+                        <div id="imageDiv" style="display:flex; flex:1; max-height:100%;">
+                            <img id="imageFrame" style="flex:1; border-radius: 30px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contenedor2_b2" style="align-items: center">
+                <button class="boton" type="button" onclick="selectImage()"><b>Seleccionar</b></button>
+            </div>
+        </div>
+        <div class="bloque bloque_3" style="width: 35%;">
+            <div class="contenedor_b3">
+                <div class="titulo_b3">ARQUITECTURA</div>
+                <div class="contenido_b3">
+                    <div class="contenido_capas_b3">
+                        <div class="capas_b3" style="height: 500px;">
+                            <div id="summarySVG" style="display:flex; flex-direction: column;">
+                                <div id="trainingSummary" style="width: 100%; color: gray; font-size: 12px; padding: 10px 0 0 0; overflow-y: auto;">
+                                    <div id="summary_model" style="margin-bottom: 15px; text-align: center;"></div>
+                                    <div id="summary_info_table" style="width: 100%;">
+                                        <div id="summary_info_header" style="display: flex; border-bottom: 2px solid gray;">
+                                            <div style="flex: 1; padding: 5px;"><b>Layer (type)</b></div>
+                                            <div style="flex: 1; padding: 5px; text-align: center;"><b>Output Shape</b></div>
+                                            <div style="flex: 1; padding: 5px; text-align: center;"><b>Param #</b></div>
+                                        </div>
+                                        <div id="summary_info_content" style="padding: 5px 0px;">
+                                            <!-- Aquí se insertará el contenido de la tabla -->
+                                        </div>
+                                    </div>
+                                    <div id="summary_info_footer" style="margin-top: 15px; text-align: left;"></div>
+                                    <div style="margin-top:30px;"></div>   <!-- hacer espacio entre los dos resumenes -->
+                                    <div id="summary2_model" style="margin-bottom: 15px; text-align: center;"></div>
+                                    <div id="summary2_info_table" style="width: 100%;">
+                                        <div id="summary2_info_header" style="display: flex; border-bottom: 2px solid gray;">
+                                            <div style="flex: 1; padding: 5px;"><b>Layer (type)</b></div>
+                                            <div style="flex: 1; padding: 5px; text-align: center;"><b>Output Shape</b></div>
+                                            <div style="flex: 1; padding: 5px; text-align: center;"><b>Param #</b></div>
+                                        </div>
+                                        <div id="summary2_info_content" style="padding: 5px 0px;">
+                                            <!-- Aquí se insertará el contenido de la tabla -->
+                                        </div>
+                                    </div>
+                                    <div id="summary2_info_footer" style="margin-top: 15px; text-align: left;"></div>
+                                </div>                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- extras invisibles para jugar -->
+    <div class="tooltip"></div>  <!-- para cuando seleccione con el ratón en la gráfica -->
+    <div id="warningMessage" class="message">  <!-- para poner warnings si pasa algún error -->
+        <div class="message-content">
+            <span class="close" onclick="closeWarning()">&times;</span>
+            <h3 id="warningMessage-title"></h3>
+            <div id="warningMessage-info"></div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/dogcat.js') }}"></script>
+</body>
+</html>

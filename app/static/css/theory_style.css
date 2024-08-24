@@ -1,0 +1,22 @@
+
+/* ----------------------------------- BLOQUES ----------------------------------- */
+
+.bloque {
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.bloque_1 {
+    width: 20%;
+}
+
+.bloque_2 {
+    width: 60%;
+}
+
+.bloque_3 {
+    width: 20%;
+}

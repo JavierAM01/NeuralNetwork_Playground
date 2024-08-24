@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MNIST Training</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/playground_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mnist_board_style.css') }}">
+    <script src="https://d3js.org/d3.v6.min.js"></script>  <!-- import d3 para dibujar-->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>    <!-- import socketio para conexiones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  <!-- para los iconos-->
+</head>
+<body>
+    <header id="header"></header>
+    <div class="main_container">
+        <div class="bloque bloque_1">
+            <div class="contenedor_b1">
+                <div class="titulo_b1">MNIST</div>
+                <div class="contenido_b1">
+                    <div class="contenido_b1">
+                        <p>Bienvenido al playground de redes neuronales para el reconocimiento de dígitos escritos a mano del conjunto de datos MNIST. En este espacio interactivo, tendrás la oportunidad de diseñar y configurar tu propia red neuronal desde cero en la sección <b>Configuración</b>, internamente se añadirá una capa densa al final de 10 salidas indicando la probabilidad final de cada dígito. Una vez establecida la arquitectura, podrás proceder a entrenar tu modelo en la sección <b>Entrenamiento</b>. </p>
+                        <p>Tras completar el entrenamiento, podrás evaluar el rendimiento de tu red neuronal utilizando la herramienta <b>Probar RED</b>. Aquí, tendrás la libertad de dibujar dígitos manualmente en tiempo real y observar cómo tu red procesa estas entradas y genera predicciones. Esta plataforma te ofrece una forma práctica y educativa de explorar y entender cómo las redes neuronales pueden aprender a interpretar y clasificar datos visuales complejos.</p>
+                    </div>
+                </div>
+                <div class="red" id="networkSVG">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+            </div>
+        </div>
+        <div class="bloque bloque_2">
+            <div class="contenedor1_b2" id="initialDisplay" style="display:flex;">
+                <div class="grafica" id="graphSVG">
+                    <svg width="100%" height="100%"></svg>
+                </div>
+                <div class="grafica" id="summarySVG" style="display:none; flex-direction: column;">
+                    <div id="trainingSummary" style="width: 70%; color: gray; font-size: 12px; padding: 10px 0 0 0; overflow-y: auto;">
+                        <div id="summary_model" style="margin-bottom: 15px; text-align: center;"></div>
+                        <div id="summary_info_table" style="width: 100%;">
+                            <div id="summary_info_header" style="display: flex; border-bottom: 2px solid gray;">
+                                <div style="flex: 1; padding: 5px;"><b>Layer (type)</b></div>
+                                <div style="flex: 1; padding: 5px; text-align: center;"><b>Output Shape</b></div>
+                                <div style="flex: 1; padding: 5px; text-align: center;"><b>Param #</b></div>
+                            </div>
+                            <div id="summary_info_content" style="padding: 5px 0px;">
+                                <!-- Aquí se insertará el contenido de la tabla -->
+                            </div>
+                        </div>
+                        <div id="summary_info_footer" style="margin-top: 15px; text-align: left;"></div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="middle_container" id="playgroundDisplay" style="display:none;">
+                <div class="flex-column-container">
+                    <div id="playgroundInternalButtons">
+                        <div id="clearBoard" style="padding-right: 20px;"><i class="fa-solid fa-trash"></i></div>
+                        <div id="playButton" style="padding-right: 20px;"><i class="fa-solid fa-play"></i></div>
+                    </div>
+                    <div id="boardDisplay">
+                        <div id="drawing-board"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="contenedor2_b2" id="initialButtons">
+                <button class="boton" id="createNetwork">Crear RED</button>
+                <button class="boton" id="trainNetwork">Entrenar RED</button>
+            </div>
+            <div class="contenedor2_b2" id="trainedButtons" style="display: none;">
+                <button class="boton" id="resetNetwork">Resetear RED</button>
+                <button class="boton" id="playNetwork">Probar RED</button>
+            </div>
+            <div class="contenedor2_b2" id="playgroundButtons" style="display: none;">
+                <button class="boton" id="resetNetwork">Resetear RED</button>
+                <button class="boton" id="volverButton"> Volver</button>
+            </div>
+        </div>
+        <div class="bloque bloque_3">
+            <div class="contenedor_b3">
+                <div class="titulo_b3">CONFIGURACIÓN</div>
+                <div class="contenido_b3">
+                    <div class="contenido_capas_b3">
+                        <div class="subtitulo_b3" style="display: flex; align-items: center; justify-content: space-between;">
+                            <span>Capas:</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="button-sidebar" type="button" id="addLayer" onclick="addLayerInputs()"><b>+</b></button>
+                                <button class="button-sidebar" type="button" id="removeLayer" onclick="removeLayerInputs()"><b>-</b></button>
+                            </div>
+                        </div>
+                        <div class="capas_b3">
+                            <form id="layerForm">
+                                <br>
+                                <div id="layersConfig"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="contenido_entrenamiento_b3">
+                        <div class="subtitulo_b3">Entrenamiento</div>
+                        <div class="entrenamiento_b3">
+                            <form>
+                                <div>
+                                    Etapas: 
+                                    <input id="trainingEpochs" type="number" value="1" style = "width: 50px;">
+                                    <br><br>
+                                    Tamaño de Batch: 
+                                    <input id="trainingBatchSize" type="number" value="128" style = "width: 50px;">
+                                    <br><br>
+                                    Optimizador: 
+                                    <select id="trainingOptimizer" style = "width: 100px;">
+                                        <option value="adam">adam</option>
+                                        <option value="sgd">sgd</option>
+                                        <option value="rmsprop">rmsprop</option>
+                                        <option value="adagrad">adagrad</option>
+                                        <option value="adadelta">adadelta</option>
+                                        <option value="adamax">adamax</option>
+                                        <option value="nadam">nadam</option>
+                                    </select>
+                                    <br><br>
+                                    Función de error: 
+                                    <select id="trainingLoss" style = "width: 200px;">
+                                        <option value="binary_crossentropy">binary_crossentropy</option>
+                                        <option value="categorical_crossentropy">categorical_crossentropy</option>
+                                        <option value="sparse_categorical_crossentropy">sparse_categorical_crossentropy</option>
+                                        <option value="mean_squared_error">mean_squared_error</option>
+                                        <option value="hinge">hinge</option>
+                                    </select>
+                                    <br>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- extras invisibles para jugar -->
+    <div class="tooltip"></div>  <!-- para cuando seleccione con el ratón en la gráfica -->
+    <div id="warningMessage" class="message">  <!-- para poner warnings si pasa algún error -->
+        <div class="message-content">
+            <span class="close" onclick="closeWarning()">&times;</span>
+            <h3 id="warningMessage-title"></h3>
+            <div id="warningMessage-info"></div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/mnist.js') }}"></script>
+</body>
+</html>

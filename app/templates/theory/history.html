@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theory_style.css') }}">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Historia de las Redes Neuronales</title>
+</head>
+<body>
+    <header id="header"></header>
+    <div class="main_container">
+        <div class="bloque bloque_1"></div>
+        <div class="bloque bloque_2">
+            <section>
+                <h2>Orígenes y Conceptos Iniciales</h2>
+                <p>La conceptualización de las redes neuronales se remonta a los trabajos iniciales de McCulloch y Pitts, quienes introdujeron modelos matemáticos de cálculo neuronal basados en lógica y álgebra. Su modelo, conocido como "neuronas de umbral", se puede representar con la siguiente fórmula:</p>
+                <p>\[ y = f(\sum_{i=1}^n w_i x_i - \text{umbral}) \]</p>
+                <img src="{{ url_for('static', filename='images/mcculloch_pitts.jpg') }}" alt="McCulloch y Pitts">
+                <p>Las redes neuronales artificiales (RNA) son modelos computacionales inspirados en el cerebro humano y se han desarrollado con el objetivo de imitar la capacidad del cerebro para resolver problemas de manera eficiente, aprender de la experiencia y reconocer patrones en un conjunto confuso de datos.</p>
+                <h3>Orígenes Históricos</h3>
+                <p>El concepto de redes neuronales se remonta a la década de 1940. Warren McCulloch y Walter Pitts, dos neurocientíficos, presentaron un modelo matemático simplificado de una neurona biológica en 1943. Su modelo, conocido como la neurona de McCulloch-Pitts, era capaz de realizar cálculos simples a través de una red de elementos de conmutación que funcionaban de manera binaria. Esta fue una de las primeras aproximaciones para entender cómo las neuronas del cerebro podían trabajar juntas para realizar tareas complejas, estableciendo la base para lo que eventualmente se desarrollaría en las redes neuronales modernas.</p>
+                <h3>Desarrollo de Conceptos Iniciales</h3>
+                <p>Durante los años 50 y 60, varios investigadores exploraron ideas similares. Frank Rosenblatt introdujo el Perceptrón en 1958, una red diseñada para el reconocimiento de patrones. El Perceptrón fue notable porque era capaz de aprender y ajustar sus pesos, que son parámetros internos del modelo, en función de los errores cometidos durante el procesamiento de los datos. Aunque el Perceptrón inicial era bastante limitado (solo podía clasificar datos que eran linealmente separables), marcó un importante avance en la idea de que las máquinas podrían aprender a partir de los datos.</p>
+                <p>En 1969, Minsky y Papert publicaron "Perceptrons", que demostraba las limitaciones de las redes de Perceptrón simple, mostrando que no podían resolver problemas no lineales, como el problema del XOR. Este libro fue influyente porque sentó las bases teóricas de lo que las redes neuronales podían y no podían hacer, y llevó a un desencanto general en la investigación de las redes neuronales durante un tiempo.</p>
+                <h3>El Perceptrón de Rosenblatt</h3>
+                <p>El perceptrón, desarrollado por Frank Rosenblatt, fue uno de los primeros algoritmos de aprendizaje supervisado y se diseñó para la clasificación binaria. La regla de aprendizaje del perceptrón se basa en la actualización de los pesos en función de los errores cometidos:</p>
+                <p>\[ w_{i, \text{nuevo}} = w_{i, \text{viejo}} + \eta (y_{\text{real}} - y_{\text{predicho}}) x_i \]</p>
+                <img src="{{ url_for('static', filename='images/perceptron.jpg') }}" alt="El Perceptrón">
+            </section>
+            <section>
+                <h2>La Explosión del Aprendizaje Profundo</h2>
+                <p>La invención de las redes neuronales convolucionales por Yann LeCun y el desarrollo posterior de arquitecturas profundas han revolucionado campos como la visión por computadora y el procesamiento del lenguaje natural. La fórmula de una operación convolucional típica es:</p>
+                <p>\[ S(i, j) = (I * K)(i, j) = \sum_m \sum_n I(m, n) K(i-m, j-n) \]</p>
+                <img src="{{ url_for('static', filename='images/deep_learning.jpg') }}" alt="Aprendizaje Profundo">
+                <h3>Impacto en la Industria y la Ciencia</h3>
+                <p>Las redes neuronales profundas han encontrado aplicaciones prácticas que van desde el diagnóstico médico automatizado hasta la mejora de los sistemas de recomendación en plataformas de streaming. Su capacidad para aprender de grandes cantidades de datos ha sido un cambio de juego en muchas industrias.</p>
+            </section>
+            <section>
+                <h2>Desafíos y el Futuro de las Redes Neuronales</h2>
+                <p>A pesar de sus muchos éxitos, las redes neuronales enfrentan desafíos significativos, como la necesidad de grandes cantidades de datos de entrenamiento, la opacidad de los modelos de "caja negra", y la dificultad de interpretación de los modelos complejos. El futuro de las redes neuronales se orienta hacia hacer estos modelos más transparentes y eficientes.</p>
+            </section>
+        </div>
+        <div class="bloque bloque_3"></div>
+    </div>
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            fetch('/static/data/header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+        });
+    </script>
+</body>
+</html>
